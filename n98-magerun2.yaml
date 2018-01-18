@@ -1,0 +1,6 @@
+autoloaders:
+  Magefoo: %module%/src
+
+commands:
+  customCommands:
+    - Magefoo\Magento\Command\Customer\SendEmailCommand
