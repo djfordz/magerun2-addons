@@ -28,14 +28,12 @@ class SendEmailCommand extends \N98\Magento\Command\Customer\AbstractCustomerCom
     }
 
     public function inject(
-        \Magento\Framework\App\Helper\Context $context,
         \Magento\Framework\App\State $state,
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Framework\App\Config $config
     ) {
-        $this->_scopeConfig = $context;
         $this->_state = $state;
         $this->_storeManager = $storeManager;
         $this->inlineTranslation = $inlineTranslation;
@@ -70,13 +68,12 @@ class SendEmailCommand extends \N98\Magento\Command\Customer\AbstractCustomerCom
         try {
             $transport->sendMessage();
         } catch(\Exception $e) {
-            echo $e->getMessage();
+            echo "there was an error: " . $e->getMessage();
         }
         
-
         $this->inlineTranslation->resume();
 
-        $output->writeln("email successfully sent to" . $input->getArgument('email'));
+        $output->writeln("email successfully sent to: " . $input->getArgument('email'));
 
     }
 }
