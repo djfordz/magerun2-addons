@@ -34,7 +34,7 @@ class SendEmailCommand extends \N98\Magento\Command\Customer\AbstractCustomerCom
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Framework\App\Config $config
     ) {
-        $this->_state = $state;
+        $state->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
         $this->_storeManager = $storeManager;
         $this->inlineTranslation = $inlineTranslation;
         $this->_transportBuilder = $transportBuilder;
@@ -48,8 +48,6 @@ class SendEmailCommand extends \N98\Magento\Command\Customer\AbstractCustomerCom
         if(!$this->initMagento()) {
             return;
         }
-
-        $this->_state->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
 
         $transport = $this->_transportBuilder->setTemplateIdentifier(
             'sales_email_order_template'
