@@ -49,12 +49,19 @@ class SendEmailCommand extends \N98\Magento\Command\Customer\AbstractCustomerCom
             return;
         }
 
+        $stores = $this->_storeManager->getStores();
+
+        foreach ($stores as $store) {
+            $storeCode = $store->getCode();
+            break;
+        }
+
         $transport = $this->_transportBuilder->setTemplateIdentifier(
             'sales_email_order_template'
         )->setTemplateOptions(
-            array('area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => 0)
+            array('area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => $storeCode)
         )->setTemplateVars(
-            array('user' => $input->getArgument('email'), 'store' => $this->_storeManager->getStore(0))
+            array('user' => $input->getArgument('email'), 'store' => $this->_storeManager->getStore($storeCode))
         )->setFrom(
             array('name' => 'test', 'email' => $this->_config->getValue('trans_email/ident_sales/email'))
         )->addTo(
