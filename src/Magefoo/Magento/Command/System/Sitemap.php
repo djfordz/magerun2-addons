@@ -85,7 +85,7 @@ class Sitemap extends AbstractMagentoCommand
             return;
         }
 
-        if (version_compare($this->productMetadata->getVersion(), '2.1.5', '<') || (version_compare($this->productMetadata->getVersion(), '2.2.0', '>') && version_compare($this->productMetadata->getVersion(), '2.2.3', '<'))) {
+        if ((version_compare($this->productMetadata->getVersion(), '2.1.5', '<') && version_compare($this->productMetadata->getVersion(), '2.2.0', '>')) || (version_compare($this->productMetadata->getVersion(), '2.2.0', '>') && version_compare($this->productMetadata->getVersion(), '2.2.3', '<'))) {
             $output->writeln('Not compatible with this version of Magento, please upgrade to latest version.');
             return;
         }
