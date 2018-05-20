@@ -18,6 +18,7 @@ class SendEmailCommand extends \N98\Magento\Command\Customer\AbstractCustomerCom
     protected $_transportBuilder;
     protected $_config;
     protected $_template;
+    protected $productMetadata;
 
     protected function configure()
     {
@@ -29,12 +30,14 @@ class SendEmailCommand extends \N98\Magento\Command\Customer\AbstractCustomerCom
 
     public function inject(
         \Magento\Framework\App\State $state,
+        \Magento\Framework\App\ProductMetadataInterface $productMetadata,
         \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Framework\App\Config $config
     ) {
-        $state->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
+        $this->_state = $state;
+        $this->productMetadata = $productMetadata;
         $this->_storeManager = $storeManager;
         $this->inlineTranslation = $inlineTranslation;
         $this->_transportBuilder = $transportBuilder;
@@ -48,6 +51,12 @@ class SendEmailCommand extends \N98\Magento\Command\Customer\AbstractCustomerCom
         if(!$this->initMagento()) {
             return;
         }
+
+        if (version_compare($this->productMetadata->getVersion(), '2.1.5', '<') || (version_compare($this->productMetadata->getVersion(), '2.2.0', '>') && version_compare($this->productMetadata->getVersion(), '2.2.3', '<'))) {
+            $output->writeln('Not compatible with this version of Magento, please upgrade to latest version.');
+            return;
+        }
+        $this->_state->setAreaCode(\Magento\Framework\App\Area::AREA_FRONTEND);
 
         $stores = $this->_storeManager->getStores();
 
